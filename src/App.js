@@ -27,6 +27,7 @@ export default function App({ $target }) {
       documentId ? documentEditPage.setState() : documentsPage.setState();
     }
   };
+  // 소스트리 테스트
 
   this.route();
 
