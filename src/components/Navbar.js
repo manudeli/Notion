@@ -1,10 +1,8 @@
-import LinkButton from '../LinkButton.js';
+import LinkButton from './LinkButton.js';
 
 export default function Navbar({ $target, initialState }) {
   const $navBar = document.createElement('nav');
-  $navBar.style.height = '100vh';
-  $navBar.style.width = '200px';
-  $navBar.style.background = '#000';
+  $navBar.id = 'navigation';
 
   this.state = initialState;
 

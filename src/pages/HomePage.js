@@ -1,4 +1,4 @@
-import LinkButton from '../LinkButton.js';
+import LinkButton from '../components/LinkButton.js';
 
 export default function HomePage({ $target }) {
   const $page = document.createElement('div');
@@ -7,11 +7,12 @@ export default function HomePage({ $target }) {
     $target: $page,
     initialState: {
       text: 'New Post',
-      link: '/posts/new',
+      link: '/documents',
     },
   });
 
-  this.setState = () => {
+  this.setState = (nextState) => {
+    this.state = nextState;
     this.render();
   };
 
