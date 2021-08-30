@@ -23,7 +23,6 @@ export default function App({ $target }) {
       homePage.setState();
     } else if (pathname.indexOf('/documents') === 0) {
       const [, , documentId] = pathname.split('/');
-      console.log(documentId);
       documentId ? documentEditPage.setState() : documentsPage.setState();
     }
   };

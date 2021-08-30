@@ -1,3 +1,3 @@
-import { DocumentListItem, DocumentList } from '../DocumentList';
-
-export { DocumentListItem, DocumentList };
+import DocumentList from './DocumentList.js';
+import DocumentListItem from './DocumentListItem.js';
+export { DocumentList, DocumentListItem };

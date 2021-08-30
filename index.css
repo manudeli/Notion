@@ -3,6 +3,7 @@
   background: #2f3437;
   color: rgba(255, 255, 255, 0.9);
   height: 100vh;
+  font-weight: 600;
 }
 
 #navigation {
@@ -12,4 +13,73 @@
 
 #page {
   flex: 1;
+}
+
+.document_list {
+  margin-left: 14px;
+}
+
+.document_list_item {
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+}
+
+.document_list-open_button {
+  margin-right: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  transform: rotate(90deg);
+  background: 0;
+  border: 0;
+  transition: all 100ms;
+}
+
+.document_list-open_button.open {
+  transform: rotate(180deg);
+}
+
+.document_list_item span {
+  flex: 1;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 100ms;
+}
+
+.document_list_item span.active {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.document_list_item span:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.document_list-title {
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11.5px;
+}
+
+.document_list-title span {
+  flex: 1;
+  padding-left: 14px;
+}
+
+.document_list-add_button {
+  margin-right: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: 0;
+  color: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 2px;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  transition: all 100ms;
+  cursor: pointer;
+}
+
+.document_list-add_button:hover {
+  background: rgba(255, 255, 255, 0.2);
 }

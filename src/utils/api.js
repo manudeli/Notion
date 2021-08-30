@@ -1,11 +1,12 @@
 export const API_END_POINT = 'https://kdt.roto.codes';
 
-export const request = async (url, options = {}) => {
+export const request = async (url, options = {}, username = 'jonghyeon') => {
   try {
     const res = await fetch(`${API_END_POINT}${url}`, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
+        'x-username': username,
       },
     });
 
