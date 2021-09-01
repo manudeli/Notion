@@ -4,13 +4,27 @@ import HomePage from './pages/HomePage.js';
 import DocumentsPage from './pages/DocumentsPage.js';
 import DocumentEditPage from './pages/DocumentEditPage.js';
 
-import { initRouter } from './utils/router.js';
+import { initRouter, replace } from './utils/router.js';
+import { request } from './utils/api.js';
 
 export default function App({ $target }) {
+  $target.style = 'max-height:100vh; overflow: auto;';
   const navBar = new Navbar({ $target });
   const homePage = new HomePage({ $target });
   const documentsPage = new DocumentsPage({ $target });
-  const documentEditPage = new DocumentEditPage({ $target });
+  const documentEditPage = new DocumentEditPage({
+    $target,
+    initialState: { id: '' },
+    onClickRemoveDoc: async (id) => {
+      console.log('id', id);
+      const deleteRes = await request(`/documents/${id}`, { method: 'DELETE' });
+      deleteRes && replace('/');
+      navBar.documentListFetch();
+    },
+    onTitleUpdated: async () => {
+      await navBar.documentListFetch();
+    },
+  });
 
   this.route = () => {
     $target.innerHTML = '';
@@ -23,12 +37,30 @@ export default function App({ $target }) {
       homePage.setState();
     } else if (pathname.indexOf('/documents') === 0) {
       const [, , documentId] = pathname.split('/');
-      documentId ? documentEditPage.setState() : documentsPage.setState();
+      documentId
+        ? (() => {
+            documentEditPage.setState({
+              id: documentId,
+              title: '',
+              content: '',
+              documents: [
+                {
+                  id: null,
+                  title: '',
+                  createdAt: '',
+                  updatedAt: '',
+                },
+              ],
+              createdAt: '',
+              updatedAt: '',
+            });
+            documentEditPage.fetch();
+          })()
+        : documentsPage.setState();
     }
   };
-  // 포크 커밋 테스트
 
   this.route();
 
-  initRouter(() => this.route());
+  initRouter(this.route);
 }
