@@ -15,11 +15,11 @@ export const initRouter = (onRoute) => {
   });
 };
 
-export const push = (url) => {
+export const push = (nextUrl) => {
   window.dispatchEvent(
     new CustomEvent('route-change', {
       detail: {
-        url,
+        nextUrl,
       },
     })
   );
