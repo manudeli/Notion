@@ -44,26 +44,28 @@ export default function Editor({
   };
 
   this.render = () => {
-    const richContent = this.state.content
-      .split('<br>')
-      .map((line) => {
-        if (line.indexOf('# ') === 0) {
-          return /*html*/ `<h1>${line.substr(2)}</h1>`;
-        } else if (line.indexOf('## ') === 0) {
-          return /*html*/ `<h2>${line.substr(3)}</h2>`;
-        } else if (line.indexOf('### ') === 0) {
-          return /*html*/ `<h3>${line.substr(4)}</h3>`;
-        } else if (line.indexOf('#### ') === 0) {
-          return /*html*/ `<h4>${line.substr(5)}</h4>`;
-        } else if (line.indexOf('##### ') === 0) {
-          return /*html*/ `<h5>${line.substr(6)}</h5>`;
-        } else if (line.indexOf('###### ') === 0) {
-          return /*html*/ `<h6>${line.substr(7)}</h6>`;
-        } else {
-          return /*html*/ `${line}`;
-        }
-      })
-      .join('<br>');
+    const richContent =
+      this.state.content &&
+      this.state.content
+        .split('<br>')
+        .map((line) => {
+          if (line.indexOf('# ') === 0) {
+            return /*html*/ `<h1>${line.substr(2)}</h1>`;
+          } else if (line.indexOf('## ') === 0) {
+            return /*html*/ `<h2>${line.substr(3)}</h2>`;
+          } else if (line.indexOf('### ') === 0) {
+            return /*html*/ `<h3>${line.substr(4)}</h3>`;
+          } else if (line.indexOf('#### ') === 0) {
+            return /*html*/ `<h4>${line.substr(5)}</h4>`;
+          } else if (line.indexOf('##### ') === 0) {
+            return /*html*/ `<h5>${line.substr(6)}</h5>`;
+          } else if (line.indexOf('###### ') === 0) {
+            return /*html*/ `<h6>${line.substr(7)}</h6>`;
+          } else {
+            return /*html*/ `${line}`;
+          }
+        })
+        .join('<br>');
 
     $editor.querySelector('[name=title]').value = this.state.title;
     $editor.querySelector('[name=content]').innerHTML = richContent;
