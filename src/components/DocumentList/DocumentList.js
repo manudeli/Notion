@@ -2,17 +2,27 @@ import { request } from '../../utils/api.js';
 
 export default function DocumentList({
   $target,
-  initialState,
+  initialState = [],
   onClickListItemAdd,
   onClickListItemTitle,
 }) {
   const $documentList = document.createElement('div');
+  $documentList.id = 'document_list';
   $target.appendChild($documentList);
 
   this.state = initialState;
 
-  this.setState = (nextState) => {
-    this.state = nextState;
+  let isInit = true;
+
+  this.setState = async (nextState) => {
+    if (isInit) {
+      await this.fetch();
+      isInit = false;
+    } else if (nextState) {
+      this.state = nextState;
+    }
+
+    this.render();
   };
 
   this.getTreeItemMarkup = ({
@@ -32,16 +42,25 @@ export default function DocumentList({
     ${isOpen ? this.getTreeMarkup(documents) : ''}
   `;
 
-  this.getTreeMarkup = (documents) =>
+  this.getTreeMarkup = (documents = []) =>
     documents.length
       ? /*html*/ `
-      <ul class='document_list'>${documents
+      <ul class='document_list_ul'>${documents
         .map((item) => this.getTreeItemMarkup(item))
         .join('')}
       </ul>`
       : '';
 
-  this.render = async () => {
+  this.render = () => {
+    $documentList.innerHTML = /*html*/ `
+    <div class='document_list-title'>
+      <span>워크스페이스</span>
+      <button class='document_list-add_button'>+</button>
+    </div>
+    ${this.getTreeMarkup(this.state)}`;
+  };
+
+  this.fetch = async () => {
     const documents = await request('/documents');
 
     const updateDocuments = (documents) =>
@@ -55,17 +74,9 @@ export default function DocumentList({
       }));
 
     this.setState(updateDocuments(documents));
-    $documentList.innerHTML = /*html*/ `
-    <div class='document_list-title'>
-      <span>워크스페이스</span>
-      <button class='document_list-add_button'>+</button>
-    </div>
-    ${this.getTreeMarkup(this.state)}`;
   };
 
-  this.render();
-
-  $documentList.addEventListener('click', ({ target }) => {
+  $documentList.addEventListener('click', async ({ target }) => {
     const { id } = target.dataset;
     switch (target.tagName) {
       case 'BUTTON':
@@ -81,18 +92,18 @@ export default function DocumentList({
         break;
 
       case 'DIV':
-        const openTree = (documents, openId) =>
+        const setOpenTree = (documents, openId) =>
           documents.length
             ? documents.map(({ title, id, documents, isOpen, isActive }) => ({
                 title,
                 id,
                 isOpen: +openId === id ? !isOpen : isOpen,
-                documents: openTree(documents),
+                documents: setOpenTree(documents),
                 isActive,
               }))
             : [];
 
-        this.setState(openTree(this.state, id));
+        this.setState(setOpenTree(this.state, id));
         break;
 
       default:

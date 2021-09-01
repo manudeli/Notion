@@ -6,6 +6,10 @@ import { request } from '../utils/api.js';
 
 export default function Navbar({ $target, initialState }) {
   const $navBar = document.createElement('nav');
+  $navBar.style = `
+    position: fixed;
+    height: 100vh;
+  `;
   $navBar.id = 'navigation';
 
   this.state = initialState;
@@ -43,7 +47,6 @@ export default function Navbar({ $target, initialState }) {
     ],
 
     onClickListItemAdd: async (parentId = null) => {
-      console.log('parentId', parentId);
       const { id } = await request('/documents', {
         method: 'POST',
         body: JSON.stringify({
@@ -51,23 +54,27 @@ export default function Navbar({ $target, initialState }) {
           parent: parentId,
         }),
       });
-
+      documentList.fetch();
       push(`/documents/${id}`);
-      documentList.render();
     },
 
     onClickListItemTitle: (id) => {
-      console.log(id);
+      documentList.fetch();
       push(`/documents/${id}`);
     },
   });
 
   this.setState = (nextState) => {
+    documentList.setState();
     this.state = nextState;
     this.render();
   };
 
   this.render = () => {
     $target.appendChild($navBar);
+  };
+
+  this.documentListFetch = () => {
+    documentList.fetch();
   };
 }
