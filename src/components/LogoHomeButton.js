@@ -1,8 +1,7 @@
 export default function LogoHome({ $target, onClick }) {
-  const $logoHome = document.createElement('img');
+  const $logoHome = document.createElement('div');
   const $heading = document.createElement('h1');
-  $logoHome.style = 'margin: 12px 12px 0 12px; width: 50px; cursor: pointer;';
-  $logoHome.src = 'src/assets/logo.svg';
+  $logoHome.id = 'logo_home';
   $heading.textContent = 'Notion';
 
   this.render = () => {
