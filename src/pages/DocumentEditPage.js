@@ -15,8 +15,11 @@ export default function DocumentEditPage({
 
   this.state = initialState;
 
-  const $button = new Button({
+  const button = new Button({
     $target: $buttonGroup,
+    initialState: {
+      text: '🗑 도큐먼트 없애기',
+    },
     onClick: () => onClickRemoveDoc(this.state.id),
   });
 
@@ -55,6 +58,9 @@ export default function DocumentEditPage({
     const documentData = await request(`/documents/${this.state.id}`);
     this.setState(documentData);
 
-    $button.setState({ documentId: this.state.id, text: '도큐먼트 없애기' });
+    button.setState({
+      ...button.state,
+      documentId: this.state.id,
+    });
   };
 }
