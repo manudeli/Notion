@@ -14,8 +14,8 @@ export default function Editor({
   $editor.style = 'display:flex; flex-direction:column; min-height: 110vh;';
 
   $editor.innerHTML = /*html*/ `
-    <input type="text" name="title" style="background:none; border:0; width:100%; padding: 8px; color: white; font-size: 40px; font-weight: 700;" />
-    <div class='editor_content' name="content" contentEditable="true" data-placeholder="여기에 내용을 입력해주세요" style="width:100%; flex:1; padding: 8px;"></div>
+    <input class='editor_title' name="title" type="text" />
+    <div class='editor_content' name="content" contentEditable="true" data-placeholder="여기에 내용을 입력해주세요" style=""></div>
    `;
 
   this.state = initialState;
