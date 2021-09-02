@@ -2,13 +2,11 @@ import Button from '../components/Button.js';
 import Editor from '../components/Editor.js';
 import { request } from '../utils/api.js';
 
-import { removeItem, setItem } from '../utils/storage.js';
-
 export default function DocumentEditPage({
   $target,
   initialState,
   onClickRemoveDoc,
-  onTitleUpdated,
+  onEditing,
 }) {
   const $page = document.createElement('div');
   $page.id = 'page';
@@ -19,12 +17,8 @@ export default function DocumentEditPage({
 
   const $button = new Button({
     $target: $buttonGroup,
-    onClick: () => {
-      onClickRemoveDoc(this.state.id);
-    },
+    onClick: () => onClickRemoveDoc(this.state.id),
   });
-
-  let timer = null;
 
   const editor = new Editor({
     $target: $page,
@@ -43,32 +37,7 @@ export default function DocumentEditPage({
       createdAt: '',
       updatedAt: '',
     },
-    onEditing: (document, isTitleEdited) => {
-      const tempKey = `temp-doc-${document.id}`;
-
-      console.log(tempKey);
-
-      if (timer !== null) {
-        // debounce 코드 타이핑 중 이벤트 지연 코드
-        clearTimeout(timer);
-      }
-      timer = setTimeout(async () => {
-        setItem(tempKey, {
-          ...document,
-          tempSaveDate: new Date(),
-        });
-
-        await request(`/documents/${document.id}`, {
-          method: 'PUT',
-          body: JSON.stringify(document),
-        });
-        removeItem(tempKey);
-
-        if (isTitleEdited) {
-          onTitleUpdated();
-        }
-      }, 2000);
-    },
+    onEditing,
   });
 
   this.setState = (nextState) => {

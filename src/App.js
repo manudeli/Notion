@@ -6,6 +6,7 @@ import DocumentEditPage from './pages/DocumentEditPage.js';
 
 import { initRouter, push, replace } from './utils/router.js';
 import { request } from './utils/api.js';
+import { removeItem, setItem } from './utils/storage.js';
 
 export default function App({ $target }) {
   $target.style = 'max-height:100vh; overflow: auto;';
@@ -32,6 +33,34 @@ export default function App({ $target }) {
     replace('/');
   };
 
+  let timer = null;
+
+  const onEditing = (document, isTitleEdited) => {
+    const tempKey = `temp-doc-${document.id}`;
+
+    if (timer !== null) {
+      // debounce 코드 타이핑 중 이벤트 지연 코드
+      clearTimeout(timer);
+    }
+    timer = setTimeout(async () => {
+      setItem(tempKey, {
+        ...document,
+        tempSaveDate: new Date(),
+      });
+
+      await request(`/documents/${document.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(document),
+      });
+
+      removeItem(tempKey);
+
+      if (isTitleEdited) {
+        onTitleUpdated();
+      }
+    }, 2000);
+  };
+
   const onTitleUpdated = async () => await navBar.documentListFetch();
 
   const navBar = new Navbar({
@@ -48,7 +77,7 @@ export default function App({ $target }) {
     $target,
     initialState: { id: '' },
     onClickRemoveDoc,
-    onTitleUpdated,
+    onEditing,
   });
 
   this.route = () => {
