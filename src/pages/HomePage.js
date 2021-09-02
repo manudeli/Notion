@@ -7,7 +7,7 @@ export default function HomePage({ $target, onClickListItemAdd }) {
 
   const $button = new Button({
     $target: $page,
-    initialState: { text: '새 문서 만들기' },
+    initialState: { text: '+ 새 문서 만들기' },
     onClick: onClickListItemAdd,
   });
 

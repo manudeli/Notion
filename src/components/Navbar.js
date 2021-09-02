@@ -22,25 +22,23 @@ export default function Navbar({
   });
 
   const $topButtonGroup = document.createElement('div');
-  $topButtonGroup.style =
-    'display: flex; flex-direction: column; gap:12px; padding: 12px;';
+  $topButtonGroup.className = 'nav-top_button_group';
 
   new Button({
     $target: $topButtonGroup,
-    initialState: { text: '빠른 검색' },
+    initialState: { text: '🔍 빠른 검색' },
   });
   new Button({
     $target: $topButtonGroup,
-    initialState: { text: '모든 업데이트' },
+    initialState: { text: '⏱ 모든 업데이트' },
   });
   new Button({
     $target: $topButtonGroup,
-    initialState: { text: '설정과 멤버' },
+    initialState: { text: '⚙️ 설정과 멤버' },
   });
 
   const $bottomButtonGroup = document.createElement('div');
-  $bottomButtonGroup.style =
-    'display: flex; flex-direction: column; gap:12px; padding: 12px';
+  $bottomButtonGroup.className = 'nav-bottom_button_group';
 
   new Button({
     $target: $bottomButtonGroup,
