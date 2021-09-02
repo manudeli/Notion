@@ -8,9 +8,13 @@ export default function Navbar({
   $target,
   onClickListItemAdd,
   onClickListItemTitle,
+  getIsOpenMap,
+  onClickListItemFolderToggle,
+  onClickViewAllFolderOpen,
 }) {
   const $navBar = document.createElement('nav');
   $navBar.id = 'navigation';
+  $navBar.className = 'open';
   $navBar.style = `
   position: fixed;
   height: 100vh;
@@ -42,6 +46,11 @@ export default function Navbar({
 
   new Button({
     $target: $bottomButtonGroup,
+    initialState: { text: '📂 모두 열고 보기' },
+    onClick: onClickViewAllFolderOpen,
+  });
+  new Button({
+    $target: $bottomButtonGroup,
     initialState: { text: '+ 새 페이지' },
     onClick: onClickListItemAdd,
   });
@@ -50,6 +59,8 @@ export default function Navbar({
     $target: $navBar,
     onClickListItemAdd,
     onClickListItemTitle,
+    getIsOpenMap,
+    onClickListItemFolderToggle,
   });
 
   this.setState = (next) => {
@@ -65,4 +76,5 @@ export default function Navbar({
   };
 
   this.documentListFetch = () => documentList.fetch();
+  this.documentListRender = () => documentList.render();
 }

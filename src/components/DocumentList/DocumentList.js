@@ -1,12 +1,12 @@
 import { request } from '../../utils/api.js';
-import { getItem, setItem } from '../../utils/storage.js';
-
-const KEY_IS_OPEN_DOCUMENT_MAP = 'is_open_document_map';
 
 export default function DocumentList({
   $target,
   onClickListItemAdd,
   onClickListItemTitle,
+  onClickListItemFolderToggle,
+  getIsOpenMap,
+  isOpenAll = false,
 }) {
   const $documentList = document.createElement('div');
   $documentList.id = 'document_list';
@@ -27,18 +27,16 @@ export default function DocumentList({
     this.render();
   };
 
-  this.isOpenMap = getItem(KEY_IS_OPEN_DOCUMENT_MAP, {});
-
-  this.toggleIsOpenMap = (documentId) => {
-    const nextIsOpenMap = { ...this.isOpenMap };
-
-    nextIsOpenMap[documentId]
-      ? delete nextIsOpenMap[documentId]
-      : (nextIsOpenMap[documentId] = true);
-
-    this.isOpenMap = nextIsOpenMap;
-    this.render();
-    setItem(KEY_IS_OPEN_DOCUMENT_MAP, nextIsOpenMap);
+  const setIsOpenDocuments = (documents) => {
+    return (
+      documents.length &&
+      documents.map(({ id, title, documents }) => ({
+        id,
+        title,
+        documents: setIsOpenDocuments(documents),
+        isOpen: isOpenAll ? true : getIsOpenMap()[id] ? true : false,
+      }))
+    );
   };
 
   this.render = () => {
@@ -50,18 +48,6 @@ export default function DocumentList({
       <button class='document_list-add_button'>+</button>
     </div>
     ${getTreeMarkup(documentsWithStatus)}`;
-  };
-
-  const setIsOpenDocuments = (documents) => {
-    return (
-      documents.length &&
-      documents.map(({ id, title, documents }) => ({
-        id,
-        title,
-        documents: setIsOpenDocuments(documents),
-        isOpen: this.isOpenMap[id],
-      }))
-    );
   };
 
   const getTreeMarkup = (documents = []) => {
@@ -101,7 +87,6 @@ export default function DocumentList({
     switch (target.tagName) {
       case 'BUTTON':
         onClickListItemAdd(id);
-        if (!this.isOpenMap[id]) this.toggleIsOpenMap(id);
         break;
 
       case 'LI':
@@ -113,9 +98,8 @@ export default function DocumentList({
         break;
 
       case 'DIV':
-        this.toggleIsOpenMap(id);
+        onClickListItemFolderToggle(id);
         break;
-
       default:
         break;
     }
