@@ -1,8 +1,8 @@
 import Button from '../components/Button.js';
 import Editor from '../components/Editor.js';
 import { request } from '../utils/api.js';
-import { replace } from '../utils/router.js';
-import { getItem, removeItem, setItem } from '../utils/storage.js';
+
+import { removeItem, setItem } from '../utils/storage.js';
 
 export default function DocumentEditPage({
   $target,
@@ -17,9 +17,11 @@ export default function DocumentEditPage({
 
   this.state = initialState;
 
-  const button = new Button({
+  const $button = new Button({
     $target: $buttonGroup,
-    onClickRemoveDoc,
+    onClick: () => {
+      onClickRemoveDoc(this.state.id);
+    },
   });
 
   let timer = null;
@@ -84,6 +86,6 @@ export default function DocumentEditPage({
     const documentData = await request(`/documents/${this.state.id}`);
     this.setState(documentData);
 
-    button.setState({ documentId: this.state.id, text: '도큐먼트 없애기' });
+    $button.setState({ documentId: this.state.id, text: '도큐먼트 없애기' });
   };
 }

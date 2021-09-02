@@ -33,22 +33,12 @@ export default function Editor({
     isInit = this.state.id !== +location.pathname.split('/')[2];
   };
 
-  this.contentState = '';
-  this.setContentState = (nextState) => {
-    this.contentState = nextState;
-
-    if (isInit) {
-      this.render();
-    }
-    isInit = this.state.id !== +location.pathname.split('/')[2];
-  };
-
   this.render = () => {
     const richContent =
       this.state.content &&
       this.state.content
         .split('<br>')
-        .map((line) => {
+        .map((line, index, { length }) => {
           if (line.indexOf('# ') === 0) {
             return /*html*/ `<h1>${line.substr(2)}</h1>`;
           } else if (line.indexOf('## ') === 0) {
@@ -62,10 +52,12 @@ export default function Editor({
           } else if (line.indexOf('###### ') === 0) {
             return /*html*/ `<h6>${line.substr(7)}</h6>`;
           } else {
-            return /*html*/ `${line}`;
+            return /*html*/ `${line}${
+              index === length - 1 ? /*html*/ `<br>` : ''
+            }`;
           }
         })
-        .join('<br>');
+        .join('');
 
     $editor.querySelector('[name=title]').value = this.state.title;
     $editor.querySelector('[name=content]').innerHTML = richContent;
