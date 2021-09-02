@@ -30,7 +30,7 @@ export default function Navbar({
 
   new Button({
     $target: $topButtonGroup,
-    initialState: { text: '🔍 빠른 검색' },
+    initialState: { text: '🔍 빠른 문서 검색' },
   });
   new Button({
     $target: $topButtonGroup,
@@ -51,7 +51,7 @@ export default function Navbar({
   });
   new Button({
     $target: $bottomButtonGroup,
-    initialState: { text: '+ 새 페이지' },
+    initialState: { text: '+ 새 문서 만들기' },
     onClick: onClickListItemAdd,
   });
 

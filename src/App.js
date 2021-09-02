@@ -30,7 +30,7 @@ export default function App({ $target }) {
     const { id } = await request('/documents', {
       method: 'POST',
       body: JSON.stringify({
-        title: '문서 제목',
+        title: '제목을 적어주세요',
         parent: parentId,
       }),
     });

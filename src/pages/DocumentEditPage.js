@@ -18,7 +18,7 @@ export default function DocumentEditPage({
   const button = new Button({
     $target: $buttonGroup,
     initialState: {
-      text: '🗑 도큐먼트 없애기',
+      text: '🗑 문서 없애기',
     },
     onClick: () => onClickRemoveDoc(this.state.id),
   });
