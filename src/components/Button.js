@@ -5,30 +5,24 @@ export default function Button({
     icon: null,
     text: '',
   },
-  onClickRemoveDoc = () => {},
+  onClick = () => {},
 }) {
   const $buttonContainer = document.createElement('span');
+  $buttonContainer.style = 'display:flex';
   $buttonContainer.id = 'button';
 
   this.state = initialState;
 
   this.setState = (nextState) => {
     this.state = nextState;
-    $buttonContainer.addEventListener('click', (e) => {
-      const $button = e.target.closest('button');
-      if ($button) {
-        const { id } = $button.dataset;
-        onClickRemoveDoc(id);
-      }
-    });
 
     this.render();
   };
 
   this.render = () => {
-    const { icon, text, documentId } = this.state;
+    const { icon, text } = this.state;
     $buttonContainer.innerHTML = /*html*/ `
-    <button data-id=${documentId}>
+    <button style="flex: 1">
     <span >
     <span>${icon ? '' : ''}</span>
     ${text}
@@ -37,4 +31,13 @@ export default function Button({
  `;
     $target.appendChild($buttonContainer);
   };
+
+  $buttonContainer.addEventListener('click', (e) => {
+    const $button = e.target.closest('button');
+    if ($button) {
+      onClick();
+    }
+  });
+
+  this.render();
 }

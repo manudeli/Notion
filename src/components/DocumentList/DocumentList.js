@@ -1,8 +1,10 @@
 import { request } from '../../utils/api.js';
+import { getItem, setItem } from '../../utils/storage.js';
+
+const KEY_IS_OPEN_DOCUMENT_MAP = 'is_open_document_map';
 
 export default function DocumentList({
   $target,
-  initialState = [],
   onClickListItemAdd,
   onClickListItemTitle,
 }) {
@@ -10,7 +12,7 @@ export default function DocumentList({
   $documentList.id = 'document_list';
   $target.appendChild($documentList);
 
-  this.state = initialState;
+  this.state = [];
 
   let isInit = true;
 
@@ -25,55 +27,73 @@ export default function DocumentList({
     this.render();
   };
 
-  this.getTreeItemMarkup = ({
-    id,
-    title,
-    documents,
-    isActive,
-    isOpen,
-  }) => /*html*/ `
-    <li class='document_list_item' data-id='${id}'>
-      <div class='document_list-open_button ${
-        isOpen ? 'open' : ''
-      }' data-id='${id}'>▲</div>
-      <span data-id='${id}' class='${isActive ? 'active' : ''}'>${title}</span>
-      <button class='document_list-add_button' data-id='${id}'>+</button>
-    </li>
-    ${isOpen ? this.getTreeMarkup(documents) : ''}
-  `;
+  this.isOpenMap = getItem(KEY_IS_OPEN_DOCUMENT_MAP, {});
 
-  this.getTreeMarkup = (documents = []) =>
-    documents.length
-      ? /*html*/ `
-      <ul class='document_list_ul'>${documents
-        .map((item) => this.getTreeItemMarkup(item))
-        .join('')}
-      </ul>`
-      : '';
+  this.toggleIsOpenMap = (documentId) => {
+    const nextIsOpenMap = { ...this.isOpenMap };
+
+    nextIsOpenMap[documentId]
+      ? delete nextIsOpenMap[documentId]
+      : (nextIsOpenMap[documentId] = true);
+
+    this.isOpenMap = nextIsOpenMap;
+    this.render();
+    setItem(KEY_IS_OPEN_DOCUMENT_MAP, nextIsOpenMap);
+  };
 
   this.render = () => {
+    const documentsWithStatus = setIsOpenDocuments(this.state);
+
     $documentList.innerHTML = /*html*/ `
     <div class='document_list-title'>
       <span>워크스페이스</span>
       <button class='document_list-add_button'>+</button>
     </div>
-    ${this.getTreeMarkup(this.state)}`;
+    ${getTreeMarkup(documentsWithStatus)}`;
+  };
+
+  const setIsOpenDocuments = (documents) => {
+    return (
+      documents.length &&
+      documents.map(({ id, title, documents }) => ({
+        id,
+        title,
+        documents: setIsOpenDocuments(documents),
+        isOpen: this.isOpenMap[id],
+      }))
+    );
+  };
+
+  const getTreeMarkup = (documents = []) => {
+    return documents.length
+      ? /*html*/ `
+      <ul
+      class='document_list_ul'>
+      ${documents
+        .map(
+          ({ id, title, documents, isActive, isOpen }) => /*html*/ `
+        <li class='document_list_item' data-id='${id}'>
+          <div class='document_list-open_button' data-id='${id}'>
+          ${documents.length ? (isOpen ? '📂' : '📁') : '🗒'}
+          </div>
+          <span data-id='${id}' class='${isActive ? 'active' : ''}'>
+          ${title}
+          </span>
+          <button class='document_list-add_button' data-id='${id}'>
+          +
+          </button>
+        </li>
+        ${isOpen ? getTreeMarkup(documents) : ''}`
+        )
+        .join('')}
+      </ul>`
+      : '';
   };
 
   this.fetch = async () => {
     const documents = await request('/documents');
 
-    const updateDocuments = (documents) =>
-      documents.length &&
-      documents.map(({ id, title, documents }) => ({
-        id,
-        title,
-        documents: updateDocuments(documents),
-        isActive: false,
-        isOpen: true,
-      }));
-
-    this.setState(updateDocuments(documents));
+    this.setState(documents);
   };
 
   $documentList.addEventListener('click', async ({ target }) => {
@@ -81,6 +101,7 @@ export default function DocumentList({
     switch (target.tagName) {
       case 'BUTTON':
         onClickListItemAdd(id);
+        if (!this.isOpenMap[id]) this.toggleIsOpenMap(id);
         break;
 
       case 'LI':
@@ -92,18 +113,7 @@ export default function DocumentList({
         break;
 
       case 'DIV':
-        const setOpenTree = (documents, openId) =>
-          documents.length
-            ? documents.map(({ title, id, documents, isOpen, isActive }) => ({
-                title,
-                id,
-                isOpen: +openId === id ? !isOpen : isOpen,
-                documents: setOpenTree(documents),
-                isActive,
-              }))
-            : [];
-
-        this.setState(setOpenTree(this.state, id));
+        this.toggleIsOpenMap(id);
         break;
 
       default:
