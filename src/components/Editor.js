@@ -95,6 +95,7 @@ export default function Editor({
     this.setState(nextState);
     onEditing(this.state);
   };
+
   div.onkeydown = (e) => {
     if (e.keyCode == 13) {
       const selection = window.getSelection();
