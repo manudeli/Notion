@@ -15,10 +15,6 @@ export default function Navbar({
   onFetchSetTrieSearchObject,
   onChangeSearchText,
 }) {
-  const openSearchModal = () => {
-    modal.toggleOpenModal();
-  };
-
   const $navBar = document.createElement('nav');
   $navBar.id = 'navigation';
   $navBar.className = 'open';
@@ -35,14 +31,15 @@ export default function Navbar({
   const $topButtonGroup = document.createElement('div');
   $topButtonGroup.className = 'nav-top_button_group';
 
-  new Button({
-    $target: $topButtonGroup,
-    initialState: { text: '🔍 빠른 문서 검색' },
-    onClick: openSearchModal,
-  });
   const modal = new Modal({
     $target: $navBar,
     onChangeSearchText,
+  });
+
+  new Button({
+    $target: $topButtonGroup,
+    initialState: { text: '🔍 빠른 문서 검색' },
+    onClick: modal.toggleOpenModal,
   });
   new Button({
     $target: $topButtonGroup,

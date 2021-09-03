@@ -2,36 +2,37 @@ import { push } from '../utils/router.js';
 
 export default function Modal({ $target, onChangeSearchText }) {
   const $modal = document.createElement('div');
+  $modal.id = 'modal';
 
-  this.state = { isOpen: true, autoDocuments: [] };
+  this.state = { isOpen: false, autoDocuments: [] };
   this.setState = (nextState) => {
     this.state = nextState;
     this.render();
   };
 
   $modal.innerHTML = /*html*/ `
-    <input id="searchInput" type="text" placeholder="여기에 찾을 문서를 입력하세요" style="width:100%; background:rgba(255,255,255,0.1); padding:8px; border-radius:8px; border:0; outline:none; color: white" />
-    <ul style="margin: 12px;" ></ul>
+    <input id="searchInput" type="text" placeholder="여기에 찾을 문서를 입력하세요" autocomplete="off" />
+    <ul style="margin-top: 12px;" ></ul>
   `;
 
   this.render = () => {
-    $modal.style = `${
-      this.state.isOpen ? '' : 'display:none;'
-    } position:absolute; top:100px; left:250px; width: 300px; min-height: 100px; background:rgb(55, 60, 63); padding:16px; border-radius:16px`;
+    $modal.style = `${this.state.isOpen ? '' : 'display:none;'}`;
 
     $target.appendChild($modal);
   };
   this.render();
 
   this.toggleOpenModal = () =>
-    this.setState({ ...this.state, isOpen: !this.state.isOpen });
+    this.state.isOpen ? this.closeModal() : this.openModal();
+
+  this.openModal = () => this.setState({ ...this.state, isOpen: true });
+  this.closeModal = () => this.setState({ ...this.state, isOpen: false });
 
   const $autoDocumentsLists = $modal.querySelector('ul');
 
   const $input = $modal.querySelector('#searchInput');
   $input.addEventListener('input', () => {
     const nextAutoDocuments = onChangeSearchText($input.value);
-    console.log(nextAutoDocuments);
     this.setAutoDocuments(nextAutoDocuments);
   });
 
@@ -42,18 +43,21 @@ export default function Modal({ $target, onChangeSearchText }) {
       .map((title) => {
         const matchId = title.match(regex);
 
-        return /*html*/ `<li id='auto_completion_link' style="padding:4px" data-documentid='${matchId}'>
+        return /*html*/ `<li id='auto_completion_link' data-documentid='${matchId}'>
         ${title} 
         </li>`;
       })
       .join('')}`;
-
-    const $autoCompletionLink = $modal.querySelector('li');
-    $autoCompletionLink.addEventListener('click', (e) => {
-      this.toggleOpenModal();
-      console.log(e.target.dataset);
-      const { documentid } = e.target.dataset;
-      push(`/documents/${documentid}`);
-    });
   };
+
+  $modal.addEventListener('mouseleave', this.closeModal);
+
+  $modal.querySelector('ul').addEventListener('click', (e) => {
+    this.closeModal();
+
+    const { documentid } = e.target.dataset;
+    if (documentid !== 'null') {
+      push(`/documents/${documentid}`);
+    }
+  });
 }

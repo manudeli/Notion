@@ -42,6 +42,42 @@
   overflow: auto;
 }
 
+#modal {
+  position: absolute;
+  top: 120px;
+  left: 250px;
+  width: 300px;
+  background: rgb(55, 60, 63);
+  padding: 16px;
+  border-radius: 0px 16px 16px 16px;
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.2);
+}
+
+#searchInput {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 0;
+  outline: none;
+  color: white;
+}
+
+#auto_completion_link {
+  color: rgba(255, 255, 255, 0.8);
+  padding: 8px 16px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  margin-bottom: 4px;
+  transition: all 100ms;
+}
+
+#auto_completion_link:hover {
+  color: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.1);
+}
+
 #button_group {
   padding: 16px 0;
   display: flex;
@@ -66,6 +102,7 @@
 
 #button:hover {
   background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.2);
 }
 
 ::-webkit-scrollbar {
