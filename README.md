@@ -1,5 +1,32 @@
 # 노션 클로닝 프로젝트
 
+## 👩‍💻 요구 사항과 구현 내용
+
+### 1. 문서 추가 / 수정 / 삭제
+<img src="https://user-images.githubusercontent.com/61593290/132044754-d7c2a733-4511-498b-81dc-cf59b1e9a863.gif"  width="700"/>
+<br>
+
+### 2. 빠른 문서 검색 (자동 완성)
+- 빠른 자동완성을 위한 트라이 class 작성
+- 서버에서 documents 받아올 때 트라이에 저장
+- 검색어 입력시 저장해둔 트라이에서 빠르게 검색어 자동 완성
+<img src="https://user-images.githubusercontent.com/61593290/132045726-a080d826-b2a4-4878-89ed-c907c7b61fcf.gif"  width="700"/>
+<br>
+
+
+### 3. 내부 문서 열기 / 닫기 (새로고침시에도 유지)
+- localStorage에 열어놓은 문서의 id를 key로 Map에 저장
+- 렌더링시 빠르게 조회 할 수 있도록 함
+<img src="https://user-images.githubusercontent.com/61593290/132047977-4233a326-63e8-4883-abb1-271fa993c978.gif"  width="700"/>
+
+<br>
+
+### 4. 문서 모두 열고 보기
+- documentList의 props에 allIsOpen 속성을 만들었다.
+- allIsOpen을 true를 주면 모두 열린 상태로 나온다.
+<img src="https://user-images.githubusercontent.com/61593290/132045276-6156ccdd-ce33-4f36-881c-fd8d2ba4b623.gif"  width="700"/>
+ 
+
 ## 기본 요구사항
 
 바닐라 JS만을 이용해 노션을 클로닝합니다.
