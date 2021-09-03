@@ -50,7 +50,7 @@ export default function App({ $target }) {
   const onClickRemoveDoc = async (id) => {
     await request(`/documents/${id}`, { method: 'DELETE' });
     navBar.documentListFetch();
-    replaceBack();
+    replace('/');
   };
 
   let timer = null;
