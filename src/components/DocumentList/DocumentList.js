@@ -7,6 +7,7 @@ export default function DocumentList({
   onClickListItemFolderToggle,
   getIsOpenMap,
   isOpenAll = false,
+  onFetchSetTrieSearchObject,
 }) {
   const $documentList = document.createElement('div');
   $documentList.id = 'document_list';
@@ -78,8 +79,8 @@ export default function DocumentList({
 
   this.fetch = async () => {
     const documents = await request('/documents');
-
     this.setState(documents);
+    onFetchSetTrieSearchObject(documents);
   };
 
   $documentList.addEventListener('click', async ({ target }) => {

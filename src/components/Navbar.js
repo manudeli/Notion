@@ -3,6 +3,7 @@ import LogoHomeButton from './LogoHomeButton.js';
 
 import { push } from '../utils/router.js';
 import Button from './Button.js';
+import Modal from './Modal.js';
 
 export default function Navbar({
   $target,
@@ -11,7 +12,13 @@ export default function Navbar({
   getIsOpenMap,
   onClickListItemFolderToggle,
   onClickViewAllFolderOpen,
+  onFetchSetTrieSearchObject,
+  onChangeSearchText,
 }) {
+  const openSearchModal = () => {
+    modal.toggleOpenModal();
+  };
+
   const $navBar = document.createElement('nav');
   $navBar.id = 'navigation';
   $navBar.className = 'open';
@@ -31,6 +38,10 @@ export default function Navbar({
   new Button({
     $target: $topButtonGroup,
     initialState: { text: '🔍 빠른 문서 검색' },
+    onClick: openSearchModal,
+  });
+  const modal = new Modal({
+    $target: $navBar,
   });
   new Button({
     $target: $topButtonGroup,
@@ -61,6 +72,7 @@ export default function Navbar({
     onClickListItemTitle,
     getIsOpenMap,
     onClickListItemFolderToggle,
+    onFetchSetTrieSearchObject,
   });
 
   this.setState = (next) => {

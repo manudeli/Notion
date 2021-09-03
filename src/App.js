@@ -7,8 +7,10 @@ import DocumentEditPage from './pages/DocumentEditPage.js';
 import { initRouter, push, replace, replaceBack } from './utils/router.js';
 import { request } from './utils/api.js';
 import { getItem, removeItem, setItem } from './utils/storage.js';
+import { Trie } from './utils/trie.js';
 
 const KEY_IS_OPEN_DOCUMENT_MAP = 'is_open_document_map';
+const KEY_TRIE_DOCUMENTS = 'trie_documnets';
 
 export default function App({ $target }) {
   $target.style = 'max-height:100vh; overflow: auto;';
@@ -83,6 +85,26 @@ export default function App({ $target }) {
 
   const onTitleUpdated = async () => await navBar.documentListFetch();
 
+  const onFetchSetTrieSearchObject = async (documents) => {
+    const flattenDocuments = [];
+    (function flatten(documents) {
+      documents.length &&
+        documents.forEach(({ title, id, documents }) => {
+          flattenDocuments.push({ title, id });
+          flatten(documents);
+        });
+    })(documents);
+
+    flattenDocuments.forEach(({ title, id }) =>
+      autoCompletionTrie.insert(title, id)
+    );
+  };
+
+  const autoCompletionTrie = new Trie();
+
+  const onChangeSearchText = (text = '') =>
+    autoCompletionTrie.autocomplete(text);
+
   const navBar = new Navbar({
     $target,
     onClickListItemAdd,
@@ -90,6 +112,8 @@ export default function App({ $target }) {
     getIsOpenMap,
     onClickListItemFolderToggle: toggleIsOpenMap,
     onClickViewAllFolderOpen,
+    onFetchSetTrieSearchObject,
+    onChangeSearchText,
   });
 
   const homePage = new HomePage({
