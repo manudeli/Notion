@@ -28,15 +28,18 @@ export class Trie {
   }
 
   autocomplete(string) {
-    if (typeof string !== 'string' || !string)
-      return console.log('적절한 입력이 아닙니다.');
-
     const result = [];
+    if (typeof string !== 'string' || !string) {
+      result.push(`검색어를 입력해주세요`);
+      return result;
+    }
+
     let currentNode = this.root;
 
     for (const char of string) {
       if (!currentNode.children[char]) {
-        return console.log(`${string}은 예상 검색어에 없습니다.`);
+        result.push(`'${string}'은 예상 검색어에 없습니다.`);
+        return result;
       }
       currentNode = currentNode.children[char];
     }

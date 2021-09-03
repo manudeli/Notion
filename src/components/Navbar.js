@@ -42,6 +42,7 @@ export default function Navbar({
   });
   const modal = new Modal({
     $target: $navBar,
+    onChangeSearchText,
   });
   new Button({
     $target: $topButtonGroup,
