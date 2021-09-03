@@ -14,7 +14,7 @@ export class Trie {
   insert(string, id) {
     let currentNode = this.root;
 
-    string += ` - Document ID: ${id}`;
+    string += ` - ID: ${id}`;
     string.split('').forEach((char, index) => {
       if (!currentNode.children[char]) {
         currentNode.children[char] = new Node();

@@ -1,3 +1,5 @@
+import { push } from '../utils/router.js';
+
 export default function Modal({ $target, onChangeSearchText }) {
   const $modal = document.createElement('div');
 
@@ -34,13 +36,24 @@ export default function Modal({ $target, onChangeSearchText }) {
   });
 
   this.setAutoDocuments = (nextAutoDocuments = []) => {
+    const regex = /(?! - ID: )\d+/g;
     this.state.autoDocuments = nextAutoDocuments;
     $autoDocumentsLists.innerHTML = /*html*/ `${this.state.autoDocuments
-      .map(
-        (title) => /*html*/ `<li style="padding:4px">
-        ${title}
-        </li>`
-      )
+      .map((title) => {
+        const matchId = title.match(regex);
+
+        return /*html*/ `<li id='auto_completion_link' style="padding:4px" data-documentid='${matchId}'>
+        ${title} 
+        </li>`;
+      })
       .join('')}`;
+
+    const $autoCompletionLink = $modal.querySelector('li');
+    $autoCompletionLink.addEventListener('click', (e) => {
+      this.toggleOpenModal();
+      console.log(e.target.dataset);
+      const { documentid } = e.target.dataset;
+      push(`/documents/${documentid}`);
+    });
   };
 }
