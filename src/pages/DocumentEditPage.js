@@ -1,5 +1,6 @@
 import Button from '../components/Button.js';
 import Editor from '../components/Editor.js';
+import NestedDocuments from '../components/NestedDocuments.js';
 import { request } from '../utils/api.js';
 
 export default function DocumentEditPage({
@@ -7,6 +8,8 @@ export default function DocumentEditPage({
   initialState,
   onClickRemoveDoc,
   onEditing,
+  onClickListItemAdd,
+  onClickListItemTitle,
 }) {
   const $page = document.createElement('div');
   $page.id = 'page';
@@ -43,6 +46,12 @@ export default function DocumentEditPage({
     onEditing,
   });
 
+  const nestedDocuments = new NestedDocuments({
+    $target: $page,
+    onClickListItemAdd,
+    onClickListItemTitle,
+  });
+
   this.setState = (nextState) => {
     this.state = nextState;
     this.render();
@@ -62,5 +71,7 @@ export default function DocumentEditPage({
       ...button.state,
       documentId: this.state.id,
     });
+
+    nestedDocuments.setState(this.state.documents);
   };
 }

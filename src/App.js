@@ -111,6 +111,8 @@ export default function App({ $target }) {
     initialState: { id: '' },
     onClickRemoveDoc,
     onEditing,
+    onClickListItemAdd,
+    onClickListItemTitle,
   });
 
   this.route = () => {

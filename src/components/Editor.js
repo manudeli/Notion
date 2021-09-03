@@ -11,7 +11,7 @@ export default function Editor({
   onEditing,
 }) {
   const $editor = document.createElement('div');
-  $editor.style = 'display:flex; flex-direction:column; min-height: 110vh;';
+  $editor.style = 'display:flex; flex-direction:column;';
 
   $editor.innerHTML = /*html*/ `
     <input class='editor_title' name="title" type="text" />
